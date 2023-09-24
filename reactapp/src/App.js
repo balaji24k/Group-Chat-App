@@ -1,11 +1,18 @@
-import { Route, Switch } from 'react-router-dom/cjs/react-router-dom.min';
-import SignUpPage from './components/Authentication/SignupPage';
+import { Redirect, Route, Switch } from 'react-router-dom/cjs/react-router-dom.min';
+import SignupPage from './components/Authentication/SignupPage';
+import LoginPage from './components/Authentication/LoginPage';
 
 function App() {
   return (
     <Switch>
-      <Route path="/">
-        <SignUpPage/>
+      <Route path="/" exact>
+        <Redirect to="/login"/>
+      </Route>
+      <Route path="/signup" exact>
+        <SignupPage/>
+      </Route>
+      <Route path="/login" exact>
+        <LoginPage/>
       </Route>
     </Switch>
   );
