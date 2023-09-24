@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
 
 require("dotenv").config();
 
@@ -37,6 +38,45 @@ exports.signup = async (req, res) => {
 
   } catch (error) {
     res.status(400).json({ success: false, error: "Server error" });
+  }
+};
+
+const generateAccessToken = (id,name) => {
+  return jwt.sign({userId: id, name : name}, process.env.JWT_AUTH_KEY);
+}
+
+exports.login = async(req, res, next) => {
+  console.log("login>>>>>",req.body)
+  const { email, password } = req.body;
+  try {
+    if (isValidString(email) || isValidString(password)){
+      return res.json({success:false, error: "invaild inputs, please enter valid details"});
+    }
+    const user = await User.findOne({ where: { email } });
+    console.log("ext user login>>>>>>", user)
+    if(!user) {
+      return res.status(404).json({success:false, error: "user does not exist, create account"})
+    }
+    const userData = user.dataValues;
+    const hashPassword = userData.password;
+    bcrypt.compare(password, hashPassword, (err, result) => {
+      if(err) {
+        return res.status(400).json({success:false, error: "something went wrong!"})
+      }
+      if (result) {
+        return res.status(200).json({ 
+          success: true, 
+          message: "Loggedin Succesfully!", 
+          name : userData.name,
+          token: generateAccessToken(userData.id,userData.name)});
+      }
+      else {
+        return res.status(400).json({success:false, error: "incorrect password!"})
+      }
+    }) 
+  }
+  catch(err) {
+    res.status(400).json({error:err.message});
   }
 };
 
