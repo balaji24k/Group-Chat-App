@@ -31,9 +31,8 @@ exports.signup = async (req, res) => {
       if(err) {
         return res.status(500).json({ success: false, error: "Hashing error" });
       }
-			console.log("hash>>>>>>>>>>",hash)
       User.create({name, email, mobile, password: hash});
-      res.status(200).json({ success: true, message: "Account Created Succesfully!"});
+      res.status(200).json({ success: true, message: "Account Created Succesfully, please login"});
     })
 
   } catch (error) {
