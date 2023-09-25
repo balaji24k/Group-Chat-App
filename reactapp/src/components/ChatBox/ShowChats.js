@@ -29,7 +29,7 @@ const ShowChats = () => {
 	},[])
 
 	useEffect(()=> {
-		fetchData();
+		setInterval(fetchData,1000)
 	},[fetchData])
   return (
     <Container className={classes.container} >
