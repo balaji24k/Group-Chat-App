@@ -1,9 +1,10 @@
 import { useState } from "react";
 import classes from "./Auth.module.css";
 import SignUpForm from "./SignupForm";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const SignUpPage = () => {
-
+  const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
 
   const submitHandler = async(name,email,mobile,password) => {
@@ -23,6 +24,7 @@ const SignUpPage = () => {
         throw new Error(errorData.error || 'Something went wrong!');
       }
       setIsLoading(false);
+      history.replace('/login');
       alert("Accouct Created Succesfully!")
     } 
     catch (error) {

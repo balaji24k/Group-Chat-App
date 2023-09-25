@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import classes from "./Auth.module.css";
 import LoginForm from "./LoginForm";
+import AuthContext from "../../store/AuthContext";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const {login} = useContext(AuthContext);
 
   const submitHandler = async(email,password) => {
     try {
-      console.log("login data",email,password);
       setIsLoading(true);
       const response = await fetch(`${process.env.REACT_APP_BACKEND_API}/user/login`,{
         method: "POST",
@@ -16,15 +17,15 @@ const LoginPage = () => {
           "Content-Type": "application/json",
         },
       })
+      setIsLoading(false);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Something went wrong!');
       }
       const data = await response.json();
       console.log(data,"login");
-      setIsLoading(false);
+      login(data.token,data.name);
     } catch (error) {
-      setIsLoading(false);
       alert(error);
     }
   };

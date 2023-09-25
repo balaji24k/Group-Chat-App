@@ -1,0 +1,11 @@
+.form {
+    margin: 50px;
+    display: flex;
+    justify-content: space-between;
+    width: 500px;
+}
+
+.input {
+   border: 1px solid blue !important; 
+   width: 500px !important;
+}
