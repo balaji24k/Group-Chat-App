@@ -1,5 +1,5 @@
 .form {
-    margin: 50px;
+    margin: 50px auto;
     display: flex;
     justify-content: space-between;
     width: 500px;
@@ -8,4 +8,18 @@
 .input {
    border: 1px solid blue !important; 
    width: 500px !important;
+}
+
+.container {
+    background: rgb(205, 241, 205);
+    width: 800px !important ;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.chat {
+    border: 1px solid black;
+    padding: 5px;
+    margin: 0;
+    border-radius: 7px;
 }

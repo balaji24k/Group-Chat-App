@@ -4,6 +4,8 @@ import LoginPage from './components/Authentication/LoginPage';
 import ChatBox from './components/ChatBox/ChatBox';
 import { useContext } from 'react';
 import AuthContext from './store/AuthContext';
+import Header from './components/Header/Header';
+import ShowChats from './components/ChatBox/ShowChats';
 
 const App = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -23,7 +25,11 @@ const App = () => {
       </Route>
       <Route path="/chatbox" exact>
         {!isLoggedIn && <Redirect to="/login"/>}
-        {isLoggedIn && <ChatBox/>}
+        {isLoggedIn && <>
+          <Header/>
+          <ChatBox/>
+          <ShowChats/>
+        </>}
       </Route>
     </Switch>
   );

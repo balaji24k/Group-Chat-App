@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const AuthContext = React.createContext({
-  userEmail: "",
+  userName: "",
   login: () => {},
   logout: () => {},
   isLoggedIn: false,
