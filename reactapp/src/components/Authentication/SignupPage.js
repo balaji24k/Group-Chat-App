@@ -25,7 +25,6 @@ const SignUpPage = () => {
       }
       setIsLoading(false);
       history.replace('/login');
-      alert("Accouct Created Succesfully!")
     } 
     catch (error) {
       setIsLoading(false);

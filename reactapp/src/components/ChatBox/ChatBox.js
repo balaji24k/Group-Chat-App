@@ -13,8 +13,7 @@ const ChatBox = () => {
       const token = localStorage.getItem("token");
       const userName = localStorage.getItem("userName");
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_API}/messages`,
-        {
+				`${process.env.REACT_APP_BACKEND_API}/messages`,{
           method: "POST",
           body: JSON.stringify({ userName, message }),
           headers: {

@@ -1,4 +1,5 @@
 const Message = require('../models/Message');
+const { Op } = require('sequelize');
 
 exports.postMessage = async(req,res,next) =>{
 	try {
@@ -11,8 +12,13 @@ exports.postMessage = async(req,res,next) =>{
 
 exports.getMessages = async(req,res,next) =>{
 	try {
-		const result = await Message.findAll();
-		console.log("getExpenses>>>>>>>>>",result)
+		const targetId = req.params.id;
+		console.log("tagetId>>>>>>>",targetId);
+		const result = await Message.findAll({
+			where: {id : {[Op.gt]: targetId}},
+			order: [['id', 'DESC']]
+		});
+		console.log("getExpenses>>>>>>>>>",result);
 		res.status(200).json(result);
 	} catch (error) {
 		res.status(404).json({message:"Something Went Wrong!"});

@@ -11,14 +11,17 @@
 }
 
 .container {
-    background: rgb(205, 241, 205);
+    background: rgb(252, 248, 248);
+    box-shadow: 0 0 10px blue;
+    /* border: 2px solid red; */
     width: 800px !important ;
-    padding: 10px;
+    padding: 20px;
     border-radius: 10px;
+    margin-bottom: 100px;
 }
 
 .chat {
-    border: 1px solid black;
+    border: 1px solid blue;
     padding: 5px;
     margin: 0;
     border-radius: 7px;

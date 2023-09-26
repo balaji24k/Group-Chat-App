@@ -7,7 +7,7 @@ const auth = require('../middlewares/auth');
 
 router.post("/",auth.authenticate, messageController.postMessage);
 
-router.get("/",auth.authenticate, messageController.getMessages);
+router.get("/:id",auth.authenticate, messageController.getMessages);
 
 
 module.exports = router;
