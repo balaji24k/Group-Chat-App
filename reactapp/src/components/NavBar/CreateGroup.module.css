@@ -1,0 +1,17 @@
+.box{
+  margin: 100px auto;
+  width: 600px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px blue;
+}
+.box h1{
+  color: black;
+  text-align: center;
+}
+
+.button {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}

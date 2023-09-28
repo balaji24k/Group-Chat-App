@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
 import { Form, Button } from "react-bootstrap";
 import classes from "./ChatBox.module.css";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 const ChatBox = () => {
   const messageRef = useRef();
-
+  const {groupId} = useParams();
+  console.log(groupId,"groupid in chatbox")
   const submitHandler = async (event) => {
     try {
       event.preventDefault();
@@ -13,7 +15,7 @@ const ChatBox = () => {
       const token = localStorage.getItem("token");
       const userName = localStorage.getItem("userName");
       const response = await fetch(
-				`${process.env.REACT_APP_BACKEND_API}/messages`,{
+				`${process.env.REACT_APP_BACKEND_API}/messages/${groupId}`,{
           method: "POST",
           body: JSON.stringify({ userName, message }),
           headers: {

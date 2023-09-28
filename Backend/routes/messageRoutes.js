@@ -5,9 +5,9 @@ const messageController = require("../controllers/messageController");
 
 const auth = require('../middlewares/auth');
 
-router.post("/",auth.authenticate, messageController.postMessage);
+router.post("/:groupId",auth.authenticate, messageController.postMessage);
 
-router.get("/:id",auth.authenticate, messageController.getMessages);
+router.get("/",auth.authenticate, messageController.getMessages);
 
 
 module.exports = router;
