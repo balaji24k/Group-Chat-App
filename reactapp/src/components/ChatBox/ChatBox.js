@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 const ChatBox = () => {
   const messageRef = useRef();
   const {groupId} = useParams();
-  console.log(groupId,"groupid in chatbox")
+  // console.log(groupId,"groupid in chatbox")
   const submitHandler = async (event) => {
     try {
       event.preventDefault();

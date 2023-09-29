@@ -5,6 +5,19 @@
     width: 500px;
 }
 
+.addMemberForm {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+    margin-bottom: 20px;
+    /* height: 10px !important ; */
+    padding: 0 !important;
+}
+
+.membersButton {
+    height: 40px ;
+}
+
 .input {
    border: 1px solid blue !important; 
    width: 500px !important;
@@ -25,4 +38,19 @@
     padding: 5px;
     margin: 0;
     border-radius: 7px;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.modal {
+    max-height: 450px;
+    overflow:scroll;
+}
+
+.adminButtons {
+    padding: 0 5px !important;
 }

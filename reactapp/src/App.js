@@ -12,9 +12,24 @@ import CreateGroup from "./components/NavBar/CreateGroup";
 const App = () => {
   const { isLoggedIn } = useContext(AuthContext);
 
+  // const [showMembers, setShowMembers] = useState(false);
+  // const [groupData, setGroupData] = useState([]);
+
+	// const viewMembers = (groupData) => {
+  //   console.log(groupData,showMembers,"in view handler");
+  //   setGroupData([])
+  //   setShowMembers(true);
+  // };
+
+  // const hideMembers = () => {
+  //   setShowMembers(false);
+  // };
+
+
   return (
     <div className={classes.box} >
       <NavigationBar/>
+
       <div  style={{width:"1400px"}}>
         <Switch>
           <Route path="/" exact>
@@ -38,7 +53,7 @@ const App = () => {
             {isLoggedIn && (
               <>
                 <ChatBox />
-                <ShowChats />
+                <ShowChats/>
               </>
             )}
           </Route>

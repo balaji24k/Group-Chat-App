@@ -1,4 +1,5 @@
 const Message = require("../models/Message");
+const User = require("../models/User");
 const { Op } = require("sequelize");
 const Group = require('../models/Group');
 
@@ -36,20 +37,29 @@ exports.getMessages = async (req, res, next) => {
     const {latestChatId, groupId} = req.query;
 
     const groupWithMessages = await Group.findByPk(groupId, {
-      include: [{
-        model: Message,
-        where: { id: { [Op.gt]: latestChatId } },
-        order: [["id", "DESC"]],
-        limit: 10,
-      }], 
+      include: [
+        {
+          model: Message,
+          where: { id: { [Op.gt]: latestChatId } },
+          order: [["id", "DESC"]],
+          limit: 10,
+        },
+        {
+          model: User,
+          where: { id: req.user.id },
+          through: {
+            attributes: ['isAdmin']  // This fetches the isAdmin attribute from UserGroup table
+          }
+        }
+      ], 
     });
 
     if (!groupWithMessages) {
       return res.status(404).json({ message: "Group not found" });
     }
 
-    const groupMessages = groupWithMessages.dataValues.messages; // .Messages because of the relationship
-    console.log("group chats>>>>>>>>",groupMessages)
+    // const groupMessages = groupWithMessages.dataValues.messages; // .Messages because of the relationship
+    // console.log("group chats>>>>>>>>",groupMessages)
     res.status(200).json(groupWithMessages);
   } catch (error) {
     res.status(404).json({ message: "Something Went Wrong!" });
