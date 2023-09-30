@@ -3,32 +3,29 @@ const User = require("../models/User");
 const { Op } = require("sequelize");
 const Group = require('../models/Group');
 
-exports.postMessage = async (req, res, next) => {
+exports.postMessage = async (user, groupId, messageContent) => {
   try {
-    const currentUser = req.user;
-    const { groupId } = req.params;
-    const { userName, message } = req.body;
-
+    console.log("user mess",user)
     const group = await Group.findByPk(groupId);
     if (!group) {
-      return res.status(404).json({ message: "Group not found" });
+      throw new Error("Group not found");
     }
 
     const messageResult = await Message.create({
-      userName,
-      message,
-      userId: currentUser.id,
+      userName: user.name,
+      message: messageContent,
+      userId: user.userId,
       groupId: groupId,
     });
 
-    res.status(201).json({
-      message: "Message created successfully",
-      data: messageResult,
-    });
+    return messageResult;
+
   } catch (error) {
-    res.status(404).json({ message: "Something Went Wrong!" });
+    console.error("Error in postMessage:", error.message);
+    throw error; 
   }
 };
+
 
 exports.getMessages = async (req, res, next) => {
   try {
@@ -48,7 +45,7 @@ exports.getMessages = async (req, res, next) => {
           model: User,
           where: { id: req.user.id },
           through: {
-            attributes: ['isAdmin']  // This fetches the isAdmin attribute from UserGroup table
+            attributes: ['isAdmin'] 
           }
         }
       ], 
@@ -58,8 +55,6 @@ exports.getMessages = async (req, res, next) => {
       return res.status(404).json({ message: "Group not found" });
     }
 
-    // const groupMessages = groupWithMessages.dataValues.messages; // .Messages because of the relationship
-    // console.log("group chats>>>>>>>>",groupMessages)
     res.status(200).json(groupWithMessages);
   } catch (error) {
     res.status(404).json({ message: "Something Went Wrong!" });

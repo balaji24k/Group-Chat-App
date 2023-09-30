@@ -1,15 +1,20 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import classes from "./ChatBox.module.css";
 import { Button, Container } from "react-bootstrap";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import AddMemberForm from "./AddMemberForm";
 import ViewMembers from "./ViewMembers";
+import { io } from 'socket.io-client';
 
 const ShowChats = (props) => {
   const [chats, setChats] = useState([]);
   const [groupData, setGroupData] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [isAdminMember, setIsAdminMember] = useState(false);
+
+  const socket = io(process.env.REACT_APP_BACKEND_API, {
+    query: { token: localStorage.getItem('token') }
+  });
 
 	const userData = groupData.users && groupData.users[0].userGroup;
 	// console.log(userData,"before if")
@@ -26,7 +31,6 @@ const ShowChats = (props) => {
 	},[setIsAdminMember,userData])
 
 	const userName = localStorage.getItem('userName');
-	
 	
 	const [showMembers, setShowMembers] = useState(false);
 
@@ -50,8 +54,7 @@ const ShowChats = (props) => {
         localChats && localChats.length > 0 ? localChats[0].id : 0;
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_API}/messages/?latestChatId=${latestChatId}&groupId=${groupId}`,
-        {
+        `${process.env.REACT_APP_BACKEND_API}/messages/?latestChatId=${latestChatId}&groupId=${groupId}`,{
           headers: {
             "Content-Type": "application/json",
             Authorization: token,
@@ -103,11 +106,18 @@ const ShowChats = (props) => {
   }, [groupId]);
 
   useEffect(() => {
-    const intervalId = setInterval(fetchData, 1000 * 60 * 5);
+    socket.emit('joinGroup', groupId);
+
+    socket.on('newMessage', (message) => {
+      console.log("in socket")
+      fetchData();
+    });
+
     return () => {
-      clearInterval(intervalId);
+      socket.emit('leaveGroup', groupId);
+      socket.disconnect();
     };
-  }, [fetchData]);
+  }, [socket, groupId, fetchData]);
 
   useEffect(() => {
     fetchData();

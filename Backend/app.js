@@ -4,6 +4,17 @@ const bodyParser = require('body-parser');
 
 const sequelize = require("./util/database");
 
+const app = express();
+const server = require('http').createServer(app);
+const socketManager = require('./services/socketManager');
+
+const io = require('socket.io')(server,{
+    cors: {
+        origin: '*',
+    }});
+
+socketManager(io);
+
 const Message = require('./models/Message');
 const User = require('./models/User');
 const Group = require('./models/Group');
@@ -14,8 +25,6 @@ const messageRoutes = require('./routes/messageRoutes');
 const groupRoutes = require('./routes/gropRoutes');
 
 require("dotenv").config();
-
-const app = express();
 
 app.use(
     cors({
@@ -41,13 +50,17 @@ Group.belongsToMany(User, {through : UserGroup});
 
 const PORT = process.env.PORT;
 
+
+
 sequelize.sync()
-    .then(result => {
-        app.listen(PORT);
-    })
-    .catch(err => {
-        console.log(err)
-    })
+    // .then(result => {
+    //     app.listen(PORT);
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    // })
+
+server.listen(PORT);
 
 
 
