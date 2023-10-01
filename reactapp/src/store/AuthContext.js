@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { io } from 'socket.io-client';
 
 const AuthContext = React.createContext({
   userName: "",
@@ -8,6 +7,7 @@ const AuthContext = React.createContext({
   logout: () => {},
   isLoggedIn: false,
 });
+
 export default AuthContext;
 
 export const AuthProvider = (props) => {

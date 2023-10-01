@@ -1,11 +1,15 @@
-import React, { useContext, useRef } from "react";
-import { Form, Button } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Form, Button, Spinner } from "react-bootstrap";
 import classes from "./ChatBox.module.css";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import { io } from 'socket.io-client';
 
 const ChatBox = () => {
   const messageRef = useRef();
+  const fileRef = useRef();
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const {groupId} = useParams();
   // console.log(groupId,"groupid in chatbox");
   const token = localStorage.getItem("token");
@@ -17,28 +21,43 @@ const ChatBox = () => {
   const submitHandler = async (event) => {
     try {
       event.preventDefault();
+      setIsLoading(true)
       const message = messageRef.current.value;
-      console.log(message, "message");
+      const file = fileRef.current.files[0];
+      console.log(file, "file");
+      // console.log(message, "message");
       const userName = localStorage.getItem("userName");
-      socket.emit('sendMessage', { groupId, message, userName });
-      // const response = await fetch(
-			// 	`${process.env.REACT_APP_BACKEND_API}/messages/${groupId}`,{
-      //     method: "POST",
-      //     body: JSON.stringify({ userName, message }),
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: token,
-      //     },
-      //   }
-      // );
-      // if (!response.ok) {
-      //   const errordata = response.json();
-      //   console.log(errordata, "err");
-      //   throw new Error("Failed!");
-      // }
-			// messageRef.current.value = "";
-      // const data = await response.json();
-      // console.log(data, "posted data");
+      if(!file) {
+        console.log(message,"no file")
+        socket.emit('sendMessage', { groupId, message, userName });
+			  messageRef.current.value = "";
+        setIsLoading(false);
+        return;
+      }
+      const formData = new FormData();
+      formData.append('userName',userName);
+      formData.append('file',file);
+
+      const response = await fetch(
+				`${process.env.REACT_APP_BACKEND_API}/messages/${groupId}`,{
+          method: "POST", 
+          body: formData,
+          headers: {
+            // "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
+      setIsLoading(false);
+      socket.emit('sendFile', { groupId });
+      if (!response.ok) {
+        const errordata = response.json();
+        console.log(errordata, "err");
+        throw new Error("Failed!");
+      }
+      const data = await response.json();
+      // alert("file shared");
+      console.log(data, "posted data");
     } 
 		catch (error) {
       console.log(error, "errr catch");
@@ -53,7 +72,19 @@ const ChatBox = () => {
         type="text"
         ref={messageRef}
       />
-      <Button type="submit">Send</Button>
+      <Form.Control
+        type="file"
+        ref={fileRef}
+      />
+      <Button type="submit">
+        {isLoading ?   
+          <span>
+            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>
+          </span>
+          : 
+          'Send'
+        }
+      </Button>
     </Form>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import classes from "./ChatBox.module.css";
 import { Button, Container } from "react-bootstrap";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
@@ -68,7 +68,7 @@ const ShowChats = (props) => {
         throw new Error("Failed!");
       }
       const data = await response.json();
-      // console.log(data,"data group chats");
+      console.log(data,"data group chats");
       setGroupData(data);
       const loadedChats = [];
       data.messages.forEach((chat) => {
@@ -81,6 +81,8 @@ const ShowChats = (props) => {
           message: chat.message,
           dateString,
           timeString,
+          fileUrl : chat.fileUrl,
+          fileName : chat.fileName,
         };
         loadedChats.push(updatedChat);
       });
@@ -109,7 +111,7 @@ const ShowChats = (props) => {
     socket.emit('joinGroup', groupId);
 
     socket.on('newMessage', (message) => {
-      console.log("in socket")
+      console.log("in newMessage socket");
       fetchData();
     });
 
@@ -127,7 +129,7 @@ const ShowChats = (props) => {
     setShowForm(!showForm);
   };
 
-  // console.log(showMembers," showMember chatbox");
+  console.log(chats," chats chatbox");
   return (
     <>
 		  {showMembers && (
@@ -157,13 +159,19 @@ const ShowChats = (props) => {
         <>
           {chats &&
             chats.length > 0 &&
-            chats.map((chat) => (
-              <h6 className={classes.chat} key={chat.id}>
+            chats.map((chat) => <div key={chat.id}>
+              {chat.message && <h6 className={classes.chat} >
                 {chat.timeString} - {chat.dateString} -{" "}
                 {userName === chat.userName ? "You" : chat.userName} -{" "}
-                {chat.message}
-              </h6>
-            ))}
+                {chat.message} {console.log("message")}
+              </h6>} 
+              {chat.fileName && <h6 className={classes.chat} key={chat.id}>
+                {console.log("fileName")}
+                {chat.timeString} - {chat.dateString} -{" "}
+                {userName === chat.userName ? "You" : chat.userName} -{" "}
+                <a href={`${chat.fileUrl}`}>{chat.fileName}</a>
+              </h6>}
+            </div>)}
         </>
       </Container>
     </>

@@ -28,15 +28,19 @@
       socket.on("sendMessage", async (data) => {
         try {
           console.log("send msg",data)
-          const { groupId, message } = data;
+          const { groupId, message, file } = data;
           const user = socket.decoded;
-          const newMessage = await messageController.postMessage(user, groupId, message);
-          console.log(`Message sent in group ${groupId}: ${message}`);
+          const newMessage = await messageController.postMessage(user, groupId, message, file);
+          // console.log("file send message",file);
           io.to(groupId).emit('newMessage', newMessage);
         } catch (error) {
           console.error("Error handling sendMessage in socket:", error.message);
           socket.emit('messageError', { error: 'Failed to send the message.' });
         }
+      });
+      
+      socket.on("sendFile", (data) => {
+        io.to(data.groupId).emit('newMessage');
       });
       
       socket.on("disconnect", () => {

@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require('body-parser');
+const expressFileUpload = require('express-fileupload');
 
 const sequelize = require("./util/database");
 
@@ -32,6 +33,7 @@ app.use(
     })
 );
 app.use(bodyParser.json());
+app.use(expressFileUpload());
 
 
 app.use("/user",userRoutes);
@@ -54,7 +56,8 @@ const PORT = process.env.PORT;
 
 sequelize.sync()
     // .then(result => {
-    //     app.listen(PORT);
+    //     // app.listen(PORT);
+
     // })
     // .catch(err => {
     //     console.log(err)

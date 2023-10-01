@@ -49,7 +49,7 @@ const LoginForm = (props) => {
       </Form.Group>
 
       <div className={classes.button}>
-        <Button type="submit" variant="primary">
+        <Button type="submit">
         {props.isLoading ?   
           <span>
             Logging in...
